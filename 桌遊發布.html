@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CAPITAL PULSE v2.0｜零等待同步商戰桌遊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','Noto Sans TC','sans-serif']}}}}</script>
+<style>
+html{scroll-behavior:smooth}
+body{background:#09090B;color:#A1A1AA;font-family:'Inter','Noto Sans TC',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+background:radial-gradient(circle at 50% 0%,rgba(56,189,248,.14),rgba(52,211,153,.05) 40%,transparent 70%),
+linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+background-size:100% 100%,48px 48px,48px 48px}
+.num{font-variant-numeric:tabular-nums}
+.card{border-radius:1rem;backdrop-filter:blur(12px);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+transition:all .3s cubic-bezier(.16,1,.3,1)}
+.card:hover{transform:translateY(-4px);border-color:var(--g,rgba(56,189,248,.5));box-shadow:0 0 28px -6px var(--g,rgba(56,189,248,.4))}
+.btn{transition:all .3s cubic-bezier(.16,1,.3,1);border:1px solid rgba(255,255,255,.08)}
+.btn:hover:not(:disabled){transform:translateY(-2px);border-color:var(--g,#38BDF8);box-shadow:0 0 20px -4px var(--g,#38BDF8)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.ico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.cell{position:relative;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:10px;
+display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;overflow:hidden;text-align:center;line-height:1.15}
+.log{animation:in .4s cubic-bezier(.16,1,.3,1)}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#log::-webkit-scrollbar{width:4px}#log::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:4px}
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- NAV -->
+<header class="fixed top-0 inset-x-0 z-40 backdrop-blur-md bg-[#09090B]/70 border-b border-white/[0.08]">
+<div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+<a href="#top" class="flex items-center gap-2 text-white font-extrabold tracking-tight text-sm">
+<svg class="ico" viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>CAPITAL PULSE <span class="text-sky-400">v2.0</span></a>
+<nav class="hidden md:flex gap-6 text-sm"><a class="hover:text-white transition" href="#upgrade">版本升級</a><a class="hover:text-white transition" href="#mechanics">核心機制</a><a class="hover:text-white transition" href="#demo">互動試玩</a><a class="hover:text-white transition" href="#value">商業價值</a></nav>
+<a href="#demo" class="btn rounded-lg bg-white text-black text-sm font-bold px-3.5 py-1.5" style="--g:#38BDF8">立即試玩 →</a>
+</div></header>
+
+<main id="top">
+<!-- HERO -->
+<section class="pt-40 pb-24 px-4 text-center max-w-6xl mx-auto" id="upgrade">
+<span class="inline-block rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs text-sky-300 tracking-wide">RELEASE v2.0 · 零等待同步商戰桌遊</span>
+<h1 class="mt-7 text-4xl md:text-6xl font-black text-white tracking-tight leading-[1.15]">消除多餘計算，<br class="md:hidden">讓每一回合只保留<span class="bg-gradient-to-r from-sky-400 to-emerald-400 bg-clip-text text-transparent">純粹心理博弈</span>。</h1>
+<p class="mt-6 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">第一版驗證了「同步走位」與「插手干預」的樂趣；第二版針對「規則過於複雜」的反饋進行精準減法，將決策濃縮為直覺的「半價入股」與「雙倍攔截」。</p>
+<div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+<div class="card p-5 text-left" style="--g:#38BDF8"><div class="num text-3xl md:text-4xl font-black text-sky-400">0%</div><div class="mt-1 text-sm">玩家空閒等待時間</div></div>
+<div class="card p-5 text-left" style="--g:#34D399"><div class="num text-3xl md:text-4xl font-black text-emerald-400">50%</div><div class="mt-1 text-sm">強行入股均一價</div></div>
+<div class="card p-5 text-left" style="--g:#F87171"><div class="num text-3xl md:text-4xl font-black text-red-400">200%</div><div class="mt-1 text-sm">雙倍攔截奪地價</div></div>
+<div class="card p-5 text-left" style="--g:#FBBF24"><div class="num text-3xl md:text-4xl font-black text-amber-400">12 局</div><div class="mt-1 text-sm">15 分鐘快節奏對戰</div></div>
+</div>
+</section>
+
+<!-- BENTO -->
+<section id="mechanics" class="py-24 px-4 max-w-6xl mx-auto">
+<p class="text-xs tracking-widest text-sky-400 font-semibold">CORE MECHANICS</p>
+<h2 class="mt-3 text-3xl md:text-4xl font-black text-white tracking-tight">第二版本的四大精準減法</h2>
+<div class="mt-12 grid grid-cols-1 md:grid-cols-12 gap-4">
+<article class="card p-7 md:col-span-7" style="--g:#38BDF8"><svg class="ico text-sky-400" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 9v6M12 9v6M16 9v6"/></svg>
+<h3 class="mt-4 text-xl font-bold text-white tracking-tight">移除「查稅陷阱」，階段一只做一件事</h3>
+<p class="mt-3 leading-relaxed">拿掉繁瑣的點地圖埋雷動作，玩家專注於 <b class="text-sky-300">1～4 步</b>固定手牌池（出完一輪才重置），把 100% 心力放在觀察對手剩餘卡片與記牌預判。</p></article>
+<article class="card p-7 md:col-span-5" style="--g:#34D399"><svg class="ico text-emerald-400" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9h9"/></svg>
+<h3 class="mt-4 text-xl font-bold text-white tracking-tight">均一付半價，強行入股 30%</h3>
+<p class="mt-3 leading-relaxed">廢除 40% 零頭心算。對手買地時你只要付半價（50%）就成為唯一小股東，未來任何人踩格，地主拿 <b class="text-emerald-300 num">70%</b>、小股東永遠躺分 <b class="text-emerald-300 num">30%</b>。</p></article>
+<article class="card p-7 md:col-span-5" style="--g:#F87171"><svg class="ico text-red-400" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+<h3 class="mt-4 text-xl font-bold text-white tracking-tight">直覺雙倍攔截，一鍵粉碎壟斷</h3>
+<p class="mt-3 leading-relaxed">同色街區湊齊，過路費翻 2 倍！對手即將壟斷時，直接付雙倍（<span class="num">200%</span>）溢價強行奪走地皮。</p></article>
+<article class="card p-7 md:col-span-7" style="--g:#FBBF24"><svg class="ico text-amber-400" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4 4 20"/></svg>
+<h3 class="mt-4 text-xl font-bold text-white tracking-tight">廢除拖戲暗標，撞格直接平分產權</h3>
+<p class="mt-3 leading-relaxed">多人同時踩進同一無主空地時，不再停下來拉滑桿競標，改為自動各出半價平分產權（一人地主 <span class="num">70%</span>、一人股東 <span class="num">30%</span>）。</p></article>
+</div></section>
+
+<!-- SIMULATOR -->
+<section id="demo" class="py-24 px-4 max-w-6xl mx-auto">
+<p class="text-xs tracking-widest text-emerald-400 font-semibold">LIVE PROTOTYPE SIMULATOR</p>
+<h2 class="mt-3 text-3xl md:text-4xl font-black text-white tracking-tight">現場互動試玩舞台</h2>
+<p class="mt-3 max-w-xl">4 人同局微縮模擬器：選步數 → 同步推進 → 干預對手購地。共 12 回合。</p>
+<div class="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-4">
+<div class="card p-4 lg:col-span-4 !transform-none" style="--g:rgba(255,255,255,.12)"><div class="flex justify-between items-center mb-3"><h3 class="text-white font-bold text-sm">玩家資產面板</h3><span id="rd" class="num text-xs rounded-full bg-white/10 px-2.5 py-1 text-white"></span></div><div id="pl" class="space-y-2.5"></div></div>
+<div class="card p-4 lg:col-span-5 !transform-none" style="--g:rgba(255,255,255,.12)">
+<div id="stage" class="rounded-xl bg-[#121316] border border-white/[0.06] p-4 min-h-[190px]"></div>
+<div id="board" class="mt-3 grid grid-cols-5 gap-1 aspect-square"></div>
+<div class="mt-3 flex items-center justify-between text-[11px]"><span><i class="inline-block w-2 h-2 rounded-full bg-white mr-1"></i>地主　<i class="inline-block w-2 h-2 rounded-full bg-emerald-400 mr-1"></i>小股東</span>
+<button onclick="init()" class="btn rounded-lg bg-white/[0.06] text-white px-3 py-1.5 text-xs">重開測試</button></div></div>
+<div class="card p-4 lg:col-span-3 !transform-none flex flex-col" style="--g:rgba(255,255,255,.12)"><h3 class="text-white font-bold text-sm mb-3 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-400"></span>派對連線訊息流</h3><div id="log" class="space-y-2 overflow-y-auto h-72 lg:h-auto lg:flex-1 lg:max-h-[520px] pr-1 text-xs"></div></div>
+</div></section>
+
+<!-- VALUE -->
+<section id="value" class="py-24 px-4 max-w-6xl mx-auto">
+<p class="text-xs tracking-widest text-amber-400 font-semibold">INVESTOR HIGHLIGHTS</p>
+<h2 class="mt-3 text-3xl md:text-4xl font-black text-white tracking-tight">純數位商戰桌遊的商業優勢</h2>
+<div class="mt-10 divide-y divide-white/[0.08] border-y border-white/[0.08]">
+<div class="py-7 flex gap-5"><span class="num text-3xl font-black text-sky-400 w-12">01</span><div><h3 class="text-white font-bold text-lg">零實體製造成本</h3><p class="mt-1">免除開模、印刷與庫存風險，電腦 0.05 秒自動結算 70/30 複雜分帳。</p></div></div>
+<div class="py-7 flex gap-5"><span class="num text-3xl font-black text-emerald-400 w-12">02</span><div><h3 class="text-white font-bold text-lg">自帶語音派對裂變</h3><p class="mt-1">合法蹭朋友分紅與雙倍截胡極具綜藝感，天然適合 Discord 語音開黑與實況直播推廣。</p></div></div>
+<div class="py-7 flex gap-5"><span class="num text-3xl font-black text-amber-400 w-12">03</span><div><h3 class="text-white font-bold text-lg">模組化地圖快速變現</h3><p class="mt-1">底層雙階段同步引擎已完成，可零成本換皮推出各類主題擴充地圖包。</p></div></div>
+</div></section>
+</main>
+<footer class="border-t border-white/[0.08] py-10 text-center text-xs">© 2026 CAPITAL PULSE v2.0 · 零等待同步商戰桌遊</footer>
+
+<!-- MODAL -->
+<div id="modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+<div class="card w-full max-w-md p-7 !transform-none" style="--g:rgba(255,255,255,.12)"><h3 class="text-2xl font-black text-white tracking-tight">12 回合結算排行榜</h3><div id="rank" class="mt-5 space-y-2"></div>
+<button onclick="init()" class="btn mt-6 w-full rounded-lg bg-white text-black font-bold py-2.5">再玩一局</button></div></div>
+
+<script>
+const P=[{n:'你 (創投代表)',c:'#38BDF8'},{n:'華爾街之狼',c:'#F87171'},{n:'矽谷創投家',c:'#A78BFA'},{n:'對沖狙擊手',c:'#FBBF24'}];
+const N=['起點','新創園','雲端','算力','直播','電競','獨角獸','A輪','機房','B輪','C輪','IPO','併購','天使','種子','孵化'];
+const GRP=[-1,0,0,0,-1,1,1,1,-1,2,2,2,-1,3,3,3], GC=['#38BDF8','#34D399','#F87171','#FBBF24'];
+const $=id=>document.getElementById(id), fm=n=>'$'+Math.round(n).toLocaleString();
+const price=i=>200+i*20;
+const XY=i=>i<=4?[0,i]:i<=8?[i-4,4]:i<=12?[4,12-i]:[16-i,0]; // [row,col]
+const Q={half:['哇！你居然半價入股我？太狠了吧！','好啦，30% 先借你躺著收！'],dbl:['雙倍攔截？我的地！你是強盜嗎！','這溢價我認輸，下次換我截你！'],split:['我們撞格了？那就平分吧！','同時踩到同格，剛好各出一半。'],pass:['你不出手？那我就笑納了。']};
+let S;
+function say(who,t){const d=document.createElement('div');d.className='log rounded-lg bg-white/[0.04] p-2.5 leading-relaxed';
+ d.innerHTML=`<b style="color:${who==null?'#34D399':P[who].c}">${who==null?'系統':P[who].n}</b><br>${t}`;$('log').appendChild(d);$('log').scrollTop=1e5}
+function init(){S={cash:[3000,3000,3000,3000],pos:[0,0,0,0],pool:[0,1,2,3].map(()=>[1,2,3,4]),own:Array(16).fill(-1),sh:Array(16).fill(-1),r:1,sel:null,pend:[],phase:'pick'};
+ $('log').innerHTML='';$('modal').classList.add('hidden');$('modal').classList.remove('flex');say(null,'對局開始！請選擇步數卡。');draw()}
+function pick(c){if(S.phase!=='pick')return;S.sel=c;draw()}
+function confirmPlay(){if(S.sel==null)return;const mv=S.pool.map((p,i)=>i?p[Math.floor(Math.random()*p.length)]:S.sel);
+ const land={};
+ mv.forEach((c,i)=>{S.pool[i]=S.pool[i].filter(x=>x!==c);if(!S.pool[i].length)S.pool[i]=[1,2,3,4];
+  const o=S.pos[i];S.pos[i]=(o+c)%16;if(o+c>=16){S.cash[i]+=600;if(i===0)say(null,'你經過起點，+$600')}
+  (land[S.pos[i]]=land[S.pos[i]]||[]).push(i)});
+ Object.keys(land).map(Number).forEach(cell=>{const ps=land[cell];if(cell===0)return;
+  if(S.own[cell]>=0){ps.forEach(p=>toll(p,cell));return}
+  if(ps.length>=2){const [a,b]=ps,h=price(cell)/2;S.cash[a]-=h;S.cash[b]-=h;S.own[cell]=a;S.sh[cell]=b;
+   say(a,`在「${N[cell]}」撞格！${P[b].n}，${Q.split[0]}（各付 ${fm(h)}）`);say(b,Q.split[1]);return}
+  const p=ps[0];if(p===0){if(S.cash[0]>=price(cell)){S.cash[0]-=price(cell);S.own[cell]=0;say(null,`你買下「${N[cell]}」${fm(price(cell))}`)}}
+  else S.pend.push({p,cell})});
+ S.sel=null;next()}
+function toll(p,cell){const o=S.own[cell],s=S.sh[cell];if(p===o||p===s)return;
+ const full=GRP[cell]>=0&&[...Array(16).keys()].filter(i=>GRP[i]===GRP[cell]).every(i=>S.own[i]===o);
+ const t=price(cell)*.25*(full?2:1);S.cash[p]-=t;
+ if(s<0)S.cash[o]+=t;else{S.cash[o]+=t*.7;S.cash[s]+=t*.3}
+ say(null,`${P[p].n} 踩到「${N[cell]}」付過路費 ${fm(t)}${full?'（同色壟斷 ×2）':''}`)}
+function next(){if(S.pend.length){S.phase='act';draw();return}
+ S.r++;if(S.r>12)return finish();S.phase='pick';draw()}
+function act(t){const {p,cell}=S.pend.shift(),pr=price(cell);
+ if(t==='half'&&S.sh[cell]<0&&S.cash[0]>=pr/2){S.cash[0]-=pr/2;S.sh[cell]=0;S.cash[p]>=pr&&(S.cash[p]-=pr,S.own[cell]=p);say(p,Q.half[0]);say(null,`你以 ${fm(pr/2)} 成為「${N[cell]}」30% 小股東`)}
+ else if(t==='dbl'&&S.cash[0]>=pr*2){S.cash[0]-=pr*2;S.own[cell]=0;say(p,Q.dbl[0]);say(null,`你以 ${fm(pr*2)} 攔截「${N[cell]}」`)}
+ else{if(S.cash[p]>=pr){S.cash[p]-=pr;S.own[cell]=p;say(p,`${Q.pass[0]}買下「${N[cell]}」${fm(pr)}`)}}
+ next()}
+function worth(i){let w=S.cash[i];for(let c=1;c<16;c++){const v=price(c);if(S.own[c]===i)w+=S.sh[c]>=0?v*.7:v;if(S.sh[c]===i)w+=v*.3}return w}
+function finish(){S.r=12;S.phase='end';draw();const o=[0,1,2,3].sort((a,b)=>worth(b)-worth(a));
+ $('rank').innerHTML=o.map((i,k)=>`<div class="flex items-center justify-between rounded-lg bg-white/[0.04] px-4 py-3"><span class="text-white font-bold"><span class="num text-zinc-500 mr-2">${k+1}</span><i class="inline-block w-2 h-2 rounded-full mr-2" style="background:${P[i].c}"></i>${P[i].n}</span><span class="num text-white">${fm(worth(i))}</span></div>`).join('');
+ $('modal').classList.remove('hidden');$('modal').classList.add('flex')}
+function draw(){$('rd').textContent=`回合 ${S.r} / 12`;
+ $('pl').innerHTML=P.map((p,i)=>`<div class="rounded-xl bg-[#121316] border border-white/[0.06] p-3"><div class="flex justify-between items-center"><span class="text-white font-bold text-sm"><i class="inline-block w-2 h-2 rounded-full mr-2" style="background:${p.c}"></i>${p.n}</span><span class="num text-white text-sm font-bold">${fm(S.cash[i])}</span></div>
+ <div class="mt-2 flex items-center justify-between text-[11px]"><span class="num">產權 ${S.own.filter(x=>x===i).length}｜股東 ${S.sh.filter(x=>x===i).length}</span><span class="flex gap-1">${[1,2,3,4].map(n=>`<b class="num w-5 h-5 rounded flex items-center justify-center ${S.pool[i].includes(n)?'bg-white/15 text-white':'bg-white/[0.03] text-zinc-700 line-through'}">${n}</b>`).join('')}</span></div></div>`).join('');
+ const st=$('stage');
+ if(S.phase==='pick'){st.innerHTML=`<p class="text-xs text-sky-400 font-semibold">階段一 · 同步出牌</p><p class="mt-1 text-sm">選擇步數，預覽抵達格子</p>
+ <div class="mt-3 grid grid-cols-4 gap-2">${[1,2,3,4].map(n=>{const ok=S.pool[0].includes(n),to=(S.pos[0]+n)%16;return `<button ${ok?'':'disabled'} onclick="pick(${n})" class="btn rounded-lg py-2 text-center ${S.sel===n?'bg-sky-400/20 !border-sky-400':'bg-white/[0.04]'}" style="--g:#38BDF8"><div class="num text-xl font-black text-white">${n}</div><div class="text-[10px]">${N[to]}</div></button>`}).join('')}</div>
+ <button ${S.sel==null?'disabled':''} onclick="confirmPlay()" class="btn mt-4 w-full rounded-lg bg-white text-black font-bold py-2.5" style="--g:#38BDF8">確認出牌・全場同步推進</button>`}
+ else if(S.phase==='act'){const {p,cell}=S.pend[0],pr=price(cell),c=S.cash[0],canH=S.sh[cell]<0&&c>=pr/2;
+ st.innerHTML=`<p class="text-xs text-red-400 font-semibold">階段二 · 干預視窗</p><p class="mt-1 text-sm text-white"><b style="color:${P[p].c}">${P[p].n}</b> 準備買下「${N[cell]}」（${fm(pr)}）</p>
+ <div class="mt-3 space-y-2"><button ${canH?'':'disabled'} onclick="act('half')" class="btn w-full rounded-lg bg-emerald-400/10 text-emerald-300 py-2.5 font-bold text-sm" style="--g:#34D399">半價入股 30%　付 <span class="num">${fm(pr/2)}</span></button>
+ <button ${c>=pr*2?'':'disabled'} onclick="act('dbl')" class="btn w-full rounded-lg bg-red-400/10 text-red-300 py-2.5 font-bold text-sm" style="--g:#F87171">雙倍攔截　付 <span class="num">${fm(pr*2)}</span></button>
+ <button onclick="act('pass')" class="btn w-full rounded-lg bg-white/[0.04] text-white py-2.5 text-sm">放行觀望</button></div>`}
+ else st.innerHTML=`<p class="text-white font-bold">對局結束</p><p class="mt-1 text-sm">請查看排行榜，或按「重開測試」。</p>`;
+ const b=$('board');b.innerHTML='';const g=Array(25).fill('<div></div>');
+ for(let i=0;i<16;i++){const [r,c]=XY(i),at=P.map((_,k)=>S.pos[k]===i?`<i class="inline-block w-2.5 h-2.5 rounded-full ring-1 ring-black/40" style="background:${P[k].c}"></i>`:'').join('');
+  g[r*5+c]=`<div class="cell" style="${GRP[i]>=0?'border-bottom:2px solid '+GC[GRP[i]]:''}"><span class="text-white">${N[i]}</span>
+  <span class="flex gap-0.5 h-2.5 mt-0.5">${S.own[i]>=0?`<i class="inline-block w-2 h-2 rounded-full" style="background:${P[S.own[i]].c}"></i>`:''}${S.sh[i]>=0?'<i class="inline-block w-2 h-2 rounded-full bg-emerald-400"></i>':''}</span><span class="flex gap-0.5 flex-wrap justify-center">${at}</span></div>`}
+ b.innerHTML=g.join('')}
+init();
+</script>
+</body></html>
